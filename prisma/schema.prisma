@@ -1,0 +1,152 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model Item {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  category     Category @relation(fields: [categoryId], references: [id],onDelete:Cascade)
+  categoryId   String   @db.ObjectId
+  sku          String   @unique
+  barcode      String?
+  quantity     Int
+  unit         Unit     @relation(fields: [unitId], references: [id])
+  unitId       String   @db.ObjectId
+  brand        Brand    @relation(fields: [brandId], references: [id] , onDelete:Cascade)
+  brandId      String   @db.ObjectId
+  buyingPrice  Float
+  sellingPrice Float
+  supplier     Supplier    @relation(fields: [supplierId], references: [id], onDelete:Cascade)
+  supplierId   String   @db.ObjectId
+  warehouse     Warehouse    @relation(fields: [warehouseId], references: [id],onDelete:Cascade)
+  warehouseId   String   @db.ObjectId
+  reOrderPoint Int
+  imageUrl     String
+  weight       Float?
+  dimensions   String?
+  taxRate      Float
+  notes        String?
+  AddStockAdjustment      AddStockAdjustment[]
+  TransferStockAdjustment TransferStockAdjustment[]
+  shops        ShopItem[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Category {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String?
+  Item        Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Unit {
+  id           String @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  abbreviation String
+  Item         Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Brand {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  title String
+  Item  Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Warehouse {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  location      String?
+  description   String?
+  warehouseType String
+  stockQty      Int @default(0)
+  Item  Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model ShopItem{
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  shop        Shop      @relation(fields: [shopId], references: [id])
+  shopId      String    @db.ObjectId
+  item        Item      @relation(fields: [itemId], references: [id])
+  itemId      String    @db.ObjectId
+  quantity    Int       // Additional field to store quantity
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+}
+
+model Shop {
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  location      String?
+  description   String?
+  stockQty      Int @default(0)
+  // Item  Item[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  items ShopItem[]
+
+}
+
+model AddStockAdjustment {
+  id              String    @id @default(auto()) @map("_id") @db.ObjectId
+  referenceNumber String
+  addStockQty     Int
+  notes           String?
+  recievingWarehouseId     String    
+  item        Item @relation(fields: [itemId], references: [id],onDelete:Cascade)
+  itemId      String    @db.ObjectId
+  supplier        Supplier @relation(fields: [supplierId], references: [id],onDelete:Cascade)
+  supplierId      String    @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model TransferStockAdjustment {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  referenceNumber  String
+  transferStockQty Int
+  notes            String?
+  givingWarehouseId      String    
+  recievingWarehouseId      String    
+  item        Item @relation(fields: [itemId], references: [id],onDelete:Cascade)
+  itemId      String    @db.ObjectId
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Supplier {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  title  String
+  phone String
+  email String?
+  address String?
+  contactPerson String?
+  supplierCode String @unique
+  paymentTerms String?
+  taxID String?
+  notes String?
+  Item        Item[]
+  AddStockAdjustment      AddStockAdjustment[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
