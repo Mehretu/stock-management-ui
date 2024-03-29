@@ -74,3 +74,32 @@
     @apply bg-background text-foreground;
   }
 }
+/* Add this to your main.scss file */
+@media print {
+  /* Hide checkboxes in the table header */
+  table th input[type="checkbox"] {
+    display: none !important;
+  }
+
+  /* Hide checkboxes in the table body */
+  table td input[type="checkbox"] {
+    display: none !important;
+  }
+  table td button[type="button"] {
+    display: none !important;
+  }
+
+
+
+  /* Hide buttons in the last column */
+  table td:last-child button {
+    display: none !important;
+  }
+  table td:last-child a {
+    display: none !important;
+  }
+  
+  .actions-column {
+    display: none;
+}
+}

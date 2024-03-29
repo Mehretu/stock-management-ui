@@ -45,6 +45,8 @@ export default function Brands() {
           toggleSelectAll={toggleSelectAll}
           setSelectedRows={setSelectedRows}
           showAddToShopButton={false}
+          itemsPerPage={2}
+
           
           
           />

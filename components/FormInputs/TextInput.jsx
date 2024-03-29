@@ -1,7 +1,17 @@
 "use client"
 import React from 'react'
 
-export default function TextInput({label,name,register,errors,isRequired=true,type="text",className="sm:col-span-2",defaultValue=""}) {
+export default function TextInput({
+  label,
+  name,
+  register,
+  errors,
+  isRequired=true,
+  type="text",
+  className="sm:col-span-2",
+  defaultValue=""
+ 
+}) {
   return (
     <div className={className}>
           <label

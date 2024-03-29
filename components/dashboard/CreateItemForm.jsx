@@ -22,7 +22,7 @@ export default function CreateItemForm({categories,units,brands,warehouses,suppl
   })
   const [loading,setLoading]=useState(false)
   function redirect(){
-    router.push("/inventory-dashboard/inventory/items")
+    router.push("/inventory-dashboard/sales/items")
     router.refresh()
   }
 
@@ -58,8 +58,8 @@ export default function CreateItemForm({categories,units,brands,warehouses,suppl
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-6">
           <TextInput label="Item Title" name="title" register={register} errors={errors} className='w-full'/>
           <SelectInput name="categoryId" label="Select the Item Category" register={register} className='w-full' options={categories}/> 
-          <TextInput label="Item SKU" name="sku" register={register} errors={errors}  className='w-full'/>
-          <TextInput label="Item Barcode" name="barcode" register={register} errors={errors} className='w-full'/>
+          <TextInput label="Item Number" name="itemNumber" register={register} errors={errors}  className='w-full'/>
+          {/* <TextInput label="Item Barcode" name="barcode" register={register} errors={errors} className='w-full'/> */}
           <TextInput label="Item Quantity" type="number" name="quantity" register={register} errors={errors} className='w-full'/>
           <SelectInput name="unitId" label="Select the Item Unit" register={register} className='w-full' options={units}/> 
           <SelectInput name="brandId" label="Select the Item Brand" register={register} className='w-full' options={brands}/> 
@@ -67,10 +67,10 @@ export default function CreateItemForm({categories,units,brands,warehouses,suppl
           <TextInput label="Selling Price" type="number" name="sellingPrice" register={register} errors={errors} className='w-full'/>
           <SelectInput name="supplierId" label="Select the Item Supplier" register={register} className='w-full' options={suppliers}/> 
 
-          <TextInput label="Re-Order Point" type="number" name="reOrderPoint" register={register} errors={errors} className='w-full'/>
+          {/* <TextInput label="Re-Order Point" type="number" name="reOrderPoint" register={register} errors={errors} className='w-full'/> */}
           <SelectInput name="warehouseId" label="Select the Item Warehouse" register={register} className='w-full' options={warehouses}/> 
-          <TextInput label="Item Weight in Kgs" type="number" name="weight" register={register} errors={errors} className='w-full'/>
-          <TextInput label="Item Dimensions in cm (20 x 30)" name="dimensions" register={register} errors={errors} className='w-full'/>
+          {/* <TextInput label="Item Weight in Kgs" type="number" name="weight" register={register} errors={errors} className='w-full'/> */}
+          {/* <TextInput label="Item Dimensions in cm (20 x 30)" name="dimensions" register={register} errors={errors} className='w-full'/> */}
           <TextInput label="Item Tax Rate in %" type="number" name="taxRate" register={register} errors={errors} className='w-full'/>
           <TextareaInput label="Item Description" name="description" register={register} errors={errors}/>
           <TextareaInput label="Item Notes" name="notes" register={register} errors={errors}/>

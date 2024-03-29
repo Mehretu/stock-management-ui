@@ -1,13 +1,16 @@
 import { makePostRequest } from '@/lib/apiRequest';
 import { getData } from '@/lib/getData';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import Swal from 'sweetalert2';
 
 export default function AddToShop({ selectedRows, resourceName, reload }) {
   const [loading, setLoading] = useState(false);
-  const [selectedShop, setSelectedShop] = useState(""); // Initialize with an empty string
+  const [selectedShop, setSelectedShop] = useState(""); 
   const [shops,setShops] = useState([])
+  const router = useRouter()
+  console.log("Selected Rows",selectedRows)
 
   useEffect(() => {
     async function fetchShops() {
@@ -45,18 +48,43 @@ export default function AddToShop({ selectedRows, resourceName, reload }) {
       });
 
       if (result.isConfirmed) {
-        await makePostRequest(
-          setLoading,
-          `api/shop/add`,
-          {
-            itemIds: selectedRows, // Assuming selectedRows contains itemIds
-            shopId: selectedShop // Use the selected shop
-          },
-          resourceName,
-          reload // Assuming reload is a function to refresh data
-        );
+        const selectedItems = [];
+
+        for (const itemId of selectedRows) {
+            const response = await fetch(`/api/items/${itemId}`);
+            if (!response.ok) {
+                throw new Error("Failed to fetch item details");
+            }
+            const selectedItem = await response.json();
+            selectedItems.push(selectedItem);
+        }
+        // Now you have the details of selected items, you can proceed with your logic
+        console.log("Selected Items",selectedItems);
+  
+        const timestamp = Date.now()
+        const referenceNumbers = selectedRows.map(() => `REF-${timestamp}`)
+       
+
+        for (const selectedItem of selectedItems) {
+          await makePostRequest(
+              setLoading, 
+              'api/shopadjustments/transfer', 
+              {
+                itemId:selectedItem.id,
+                givingWarehouseId:selectedItem.warehouseId,
+                recievingShopId:selectedShop,
+                transferStockQty:selectedItem.quantity,
+                notes:"PLACEHOLDER",
+                referenceNumber:referenceNumbers[selectedItems.indexOf(selectedItem)]
+
+              },
+              resourceName,
+              );
+      }
+     
         toast.success(`Selected items added to shop successfully`);
-        // reload();
+        router.push("/inventory-dashboard/inventory/items")
+
       }
     } catch (error) {
       console.error("Error adding selected items to shop:", error);
@@ -71,11 +99,11 @@ export default function AddToShop({ selectedRows, resourceName, reload }) {
       <select
         value={selectedShop}
         onChange={handleShopChange}
-        className="border border-gray-300 rounded px-2 py-1"
+        className="text-gray-900 hover:text-gray-900 text-sm px-5 py-2.5 border border-gray-800 text-center inline-flex items-center rounded  me-2 mb-2"
       >
-        <option value="">Select Shop</option>
+        <option value="" >Select Shop</option>
         {shops.map((shop) => (
-          <option key={shop.id} value={shop.id}>
+          <option key={shop.id} value={shop.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
             {shop.title}
           </option>
         ))}
@@ -83,7 +111,7 @@ export default function AddToShop({ selectedRows, resourceName, reload }) {
       <button
         onClick={handleAddToShop}
         disabled={!selectedShop || selectedRows.length === 0 || loading}
-        className={`px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {loading ? "Adding..." : "Add to Shop"}
       </button>

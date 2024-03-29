@@ -37,11 +37,14 @@ export default  function Categories() {
       <DataTable 
             data={categories} 
             columns={columns} 
+            base="inventory"
             resourceTitle="categories"
             selectAll={selectAll}
             toggleSelectAll={toggleSelectAll}
             setSelectedRows={setSelectedRows}
             showAddToShopButton={false}
+            itemsPerPage={2}
+
             
             />
     </div>

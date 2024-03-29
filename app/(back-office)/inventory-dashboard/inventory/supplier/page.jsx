@@ -39,11 +39,14 @@ export default function Supplier() {
       <DataTable 
       data={suppliers} 
       columns={columns} 
+      base="inventory"
       resourceTitle="supplier"
       selectAll={selectAll}
       toggleSelectAll={toggleSelectAll}
       setSelectedRows={setSelectedRows}
       showAddToShopButton={false}
+      itemsPerPage={2}
+
       />
     </div>
    

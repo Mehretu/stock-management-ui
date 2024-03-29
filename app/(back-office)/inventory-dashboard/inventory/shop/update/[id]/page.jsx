@@ -3,7 +3,7 @@ import { getData } from '@/lib/getData';
 import NewShop from '../../new/page';
 
 export default async function Update({params:{id}}) {
-    const data = await getData(`warehouse/${id}`);
+    const data = await getData(`shop/${id}`);
     console.log(data)
   return (
     <div>

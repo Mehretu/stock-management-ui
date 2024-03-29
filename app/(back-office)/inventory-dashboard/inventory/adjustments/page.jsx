@@ -62,11 +62,14 @@ export default function Adjustments() {
       <DataTable 
           data={addStockAdjustment} 
           columns={addColumns} 
+          base="inventory"
           resourceTitle="adjustments/add"
           selectAll={selectAllAdd}
           toggleSelectAll={toggleSelectAllAdd}
           setSelectedRows={setSelectedRowsAdd}
           showAddToShopButton={false}
+          itemsPerPage={2}
+
 
           />
     </div>
@@ -80,6 +83,8 @@ export default function Adjustments() {
           toggleSelectAll={toggleSelectAllTransfer}
           setSelectedRows={setSelectedRowsTransfer}
           showAddToShopButton={false}
+          itemsPerPage={2}
+
           
           />
     </div>

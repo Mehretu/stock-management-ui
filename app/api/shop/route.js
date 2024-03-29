@@ -30,6 +30,9 @@ export async function GET(request){
             orderBy:{
                 createdAt:'desc'
             },
+            include:{
+                items:true,
+            }
         });
         return NextResponse.json(shop)
         

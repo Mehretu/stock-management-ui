@@ -24,7 +24,7 @@ export async function GET(request,{params:{id}}){
 export async function PUT(request,{params:{id}}){
     try {
         const{title,location,description} = await request.json()
-        const warehouse = await db.shop.update({
+        const shop = await db.shop.update({
             where:{
                 id
             },

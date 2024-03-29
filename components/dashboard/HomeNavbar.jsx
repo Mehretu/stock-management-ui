@@ -1,10 +1,24 @@
 "use client"
+import Login from '@/app/login/page'
 import { Building2 } from 'lucide-react'
+import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
 import React from 'react'
 
 export default function HomeNavbar() {
+  const {data:session,status} = useSession()
+  const username = session?.user?.name.toUpperCase();
+
+  if(status==='loading'){
+    return (
+      <div className="flex items-center justify-center w-full max-h-full border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+        <div className="px-3 py-1 mt-10 mb-10 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">loading user please wait...</div>
+      </div>
+
+    )
+  }
+  
   const pathname = usePathname()
   console.log(pathname)
   const navlinks = [
@@ -24,13 +38,13 @@ export default function HomeNavbar() {
               <Building2/>  
             </div>
             <div className="flex flex-col">
-                <p className='text-slate-700 font-semibold'>Hello, MEHRETU</p>
-                <span className='text-sm'>Mehretu</span>
+                <p className='text-slate-700 font-semibold'>Hello, {username}</p>
+                {/* <span className='text-sm'>Mehretu</span> */}
             </div>
         </div>
         <nav className='mt-6 flex space-x-4'>
-          <div class="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
-              <ul class="flex flex-wrap -mb-px">
+          <div className="text-sm font-medium text-center text-gray-500 border-b border-gray-200 dark:text-gray-400 dark:border-gray-700">
+              <ul className="flex flex-wrap -mb-px">
                  {
               navlinks.map((item, i) =>{
                 return(

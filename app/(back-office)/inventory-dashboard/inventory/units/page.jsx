@@ -39,13 +39,15 @@ export default function Units() {
     <div className="my-4 p-8">
       <DataTable 
       data={units} 
-      columns={columns} 
+      columns={columns}
+      base="inventory"
       resourceTitle="units"
       selectAll={selectAll}
       toggleSelectAll={toggleSelectAll}
       setSelectedRows={setSelectedRows}
       showAddToShopButton={false}
-      
+      itemsPerPage={10}
+
       />
     </div>
    

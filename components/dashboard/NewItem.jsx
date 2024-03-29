@@ -1,6 +1,6 @@
-import CreateItemForm from '@/components/dashboard/CreateItemForm'
 import FormHeader from '@/components/dashboard/FormHeader'
 import { getData } from '@/lib/getData'
+import CreateItemForm from './CreateItemForm'
 
 export default async function NewItem({initialData={},isUpdate=false}) {
   const categoriesData=  getData('categories')

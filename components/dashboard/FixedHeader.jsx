@@ -12,23 +12,9 @@ export default function FixedHeader({newLink,title}) {
                 <Plus className=' w-4 h-4'/>
               <span>New</span>
               </Link> 
-            {/* {Layout} */}
-            <div className="flex rounded-md overflow-hidden">
-              <button className='bg-gray-300 p-2 border-r border-gray-400 '>
-                <List className='w-4 h-4'/> 
-              </button>
-              <button className='bg-gray-100 p-2 '>
-                <LayoutGrid className='w-4 h-4'/>
-              </button>
-            </div>
-            {/* {More} */}
-            <button className='bg-gray-100 p-2 rounded-md'>
-              <MoreHorizontal className='w-4 h-4'/>
-            </button>
-            {/* {Help} */}
-            <button className='bg-orange-500 p-2 rounded-md'>
-              <HelpCircle className='text-white w-5 h-5'/>
-            </button>
+          
+            
+            
         </div>
     </div>
   )

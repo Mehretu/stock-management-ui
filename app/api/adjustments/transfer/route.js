@@ -1,5 +1,6 @@
 import db from "@/lib/db";
 import { NextResponse } from "next/server";
+import { nanoid } from 'nanoid';
 
 export async function POST(request){
 try{
@@ -11,6 +12,14 @@ try{
         notes,
         referenceNumber
     }=await request.json();
+
+    const existingItem = await db.item.findUnique({
+        where:{
+            id:itemId,
+        }
+    })
+    console.log(existingItem)
+  
     //Get the giviving warehouse
     const givingWarehouse =await db.warehouse.findUnique({
         where:{
@@ -20,7 +29,7 @@ try{
     //Get current stock
     const currentGivingWarehouseStock = givingWarehouse.stockQty;
 
-    if(parseInt(currentGivingWarehouseStock) > parseInt(transferStockQty)){
+    if(parseInt(currentGivingWarehouseStock) >= parseInt(transferStockQty)){
         const newStockForGivingWarehouse =parseInt(currentGivingWarehouseStock) - parseInt(transferStockQty)
         //Update Stock
         const updatedGivingWarehouse = await db.warehouse.update({
@@ -49,14 +58,39 @@ try{
                 id:recievingWarehouseId,
             },
             data:{
-                stockQty:newStockForRecievingWarehouse
+                stockQty:newStockForRecievingWarehouse,
+                
+
             }
         })
+        const generatedSKU = `SKU-${nanoid(6)}`;
+        const transferredItem = await db.item.create({
+            data: {
+                ...existingItem,
+                id:undefined,
+                itemNumer: generatedSKU,
+                quantity: parseInt(transferStockQty),
+                warehouseId: recievingWarehouseId,
+                itemStatus:parseInt(transferStockQty) > 5 ? "AVAILABLE":parseInt(transferStockQty) >0 ? "LOW_IN_QUANTITY": "NOT_AVAILABLE",
+
+            }
+        });
+        const updatedExistingItem = await db.item.update({
+            where: {
+                id: itemId,
+            },
+            data: {
+                quantity: {
+                    decrement: parseInt(transferStockQty) // Decrement the quantity by transferred quantity
+                }
+            }
+        });
+
     
         const adjustment= await db.transferStockAdjustment.create({
             data:{
                 transferStockQty :parseInt(transferStockQty),
-                itemId,
+                itemId:transferredItem.id,
                 givingWarehouseId,
                 recievingWarehouseId,
                 notes,

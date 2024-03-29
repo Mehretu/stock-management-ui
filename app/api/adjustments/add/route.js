@@ -42,6 +42,11 @@ try{
         },
         data:{
             stockQty:newStockQty,
+            items:{
+                connect:{
+                    id:itemId,
+                }
+            }
         }
     })
 
