@@ -77,7 +77,7 @@ model Item {
   description  String?
   category     Category @relation(fields: [categoryId], references: [id],onDelete:Cascade)
   categoryId   String   @db.ObjectId
-  itemNumber   String   @unique
+  itemNumber   String?   
   barcode      String?
   quantity     Int
   unit         Unit    @relation(fields: [unitId], references: [id])
