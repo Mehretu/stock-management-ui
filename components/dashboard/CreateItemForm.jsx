@@ -22,7 +22,7 @@ export default function CreateItemForm({categories,units,brands,warehouses,suppl
   })
   const [loading,setLoading]=useState(false)
   function redirect(){
-    router.push("/inventory-dashboard/sales/items")
+    router.push("/inventory-dashboard/inventory/items")
     router.refresh()
   }
 
@@ -72,8 +72,8 @@ export default function CreateItemForm({categories,units,brands,warehouses,suppl
           {/* <TextInput label="Item Weight in Kgs" type="number" name="weight" register={register} errors={errors} className='w-full'/> */}
           {/* <TextInput label="Item Dimensions in cm (20 x 30)" name="dimensions" register={register} errors={errors} className='w-full'/> */}
           <TextInput label="Item Tax Rate in %" type="number" name="taxRate" register={register} errors={errors} className='w-full'/>
-          <TextareaInput label="Item Description" name="description" register={register} errors={errors}/>
-          <TextareaInput label="Item Notes" name="notes" register={register} errors={errors}/>
+          <TextareaInput label="Item Description" name="description" register={register} errors={errors} isRequired={false}/>
+          <TextareaInput label="Item Notes" name="notes" register={register} errors={errors} isRequired={false}/>
            {/* Upload thing */}
           <ImageInput label="Item Image" imageUrl={imageUrl} setImageUrl={setImageUrl} endpoint='imageUploader'/>
           </div>

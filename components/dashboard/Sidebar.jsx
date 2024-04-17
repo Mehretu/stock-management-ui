@@ -1,5 +1,5 @@
 "use client"
-import { BaggageClaim, BarChart4, Cable, ChevronLeft, Home, Settings, ShoppingBag, ShoppingCart } from 'lucide-react'
+import { BaggageClaim, BarChart4, ChevronLeft, Home, Settings, ShoppingBag, ShoppingCart } from 'lucide-react'
 import Link from 'next/link'
 import React from 'react'
 import SidebarDropdownLink from './SidebarDropdownLink'
@@ -58,13 +58,21 @@ export default function Sidebar({showSidebar,setShowSidebar}) {
             href: "/inventory-dashboard/inventory/shop"
         },
         {
-            title: "Warehouse Adjustments",
+            title: "Warehouse Movements",
             href: "/inventory-dashboard/inventory/adjustments"
         },
         {
-            title:"Shop Adjustments",
+            title:"Shop Movements",
             href:"/inventory-dashboard/inventory/shopAdjustments"
-        }
+        },
+        {
+            title:"Item Balance",
+            href:"/inventory-dashboard/inventory/items/itemBalance"
+        },
+        // {
+        //     title:"Item History",
+        //     href:"/inventory-dashboard/inventory/items/itemHistory"
+        // }
     ]
     const userLinks =[
         {
@@ -154,8 +162,8 @@ export default function Sidebar({showSidebar,setShowSidebar}) {
                       {/* {Logo} */}
             <div className="flex justify-between bg-slate-950">
             <Link href="/inventory-dashboard/home/overview" className=' flex space-x-2 items-center py-3 px-2'>
-                <BaggageClaim className='w-4 h-4 text-sm'/>
-                <span className='text-sm font-semibold'>Inventory</span>
+                <BaggageClaim className='w-4 h-4'/>
+                <span className='text-xl font-semibold'>Inventory</span>
             </Link>
             <button className='px-4 py-3 lg:hidden' onClick={() => setShowSidebar(false)}>
                 <ChevronLeft className='w-4 h-4 text-white text-sm'/>
@@ -172,7 +180,8 @@ export default function Sidebar({showSidebar,setShowSidebar}) {
                 <SidebarDropdownLink  setShowSidebar={setShowSidebar} title="Sales" items={salesLinks} icon={ShoppingCart} collapse={false}/>
                 <SidebarDropdownLink  setShowSidebar={setShowSidebar} title="Purchases" items={purchaseLinks} icon={ShoppingBag} collapse={false}/>
                 <SidebarDropdownLink  setShowSidebar={setShowSidebar} title="Configurations" items={configLinks} icon={Settings} collapse={false}/>
-                <Link className="flex items-center space-x-2 p-2 hover:bg-slate-950" href="">
+                
+                <Link className="flex items-center space-x-2 p-2 hover:bg-slate-950" href="/inventory-dashboard/reports">
                     <BarChart4 className='w-4 h-4'/>
                     <span className='text-sm'>Reports</span>
                 </Link>

@@ -1,6 +1,5 @@
 import { authOptions } from "@/lib/authOptions";
 import { getServerSession } from "next-auth";
-import Link from "next/link";
 import Login from "./login/page";
 
 export default async function Home() {

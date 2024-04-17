@@ -1,10 +1,15 @@
+import { authOptions } from "@/lib/authOptions";
 import db from "@/lib/db";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 
 
 export async function POST(request) {
     try {
+        const session = await getServerSession(authOptions)
+        const user = session?.user
+        console.log("User",user)
         const salesOrderData = await request.json();
         console.log("DATA",salesOrderData)
         
@@ -72,6 +77,8 @@ export async function POST(request) {
         for (const item of salesOrderData.items) {
             await decrementItemQuantity(item.itemId, item.quantity,item.availableQuantity,item.total);
         }
+
+        
         
 
         // Create the sales order
@@ -80,6 +87,7 @@ export async function POST(request) {
                 tinNumber: salesOrderData.tinNumber,
                 referenceNumber: salesOrderData.referenceNumber,
                 customerId: salesOrderData.customerId,
+                salesRepresentativeId: user.id,
                 orderDate: new Date(),
                 orderStatus: 'PENDING', // Assuming all orders start as pending
                 itemsOrdered: { createMany: {data:itemOrders}},
@@ -92,6 +100,14 @@ export async function POST(request) {
                 vat:vatAmount,
             }
 
+        })
+
+        await db.paymentHistory.create({
+            data:{
+                salesId: salesOrder.id,
+                paidAmount:parseFloat(salesOrderData.paidAmount),
+                recievedBy: user?.name
+            }
         })
         return NextResponse.json(salesOrder)
     } catch (error) {
@@ -194,9 +210,12 @@ export async function GET(request){
             include:{
                 customer: true,
                 company: true,
+                paymentHistory:true,
+                salesRepresentative:true,
                 itemsOrdered:{
                     include:{
                         item:true,
+                    
                     }
                 } 
             }
@@ -215,27 +234,6 @@ export async function GET(request){
     }
 }
 
-// export async function GETBYid(request){
-//     try {
-//         const itemIds = request.query.split(',');
-//         const selectedItems = await db.item.findMany({
-//             where:{
-//                 id:{in:itemIds}
-//             }
-//         });
-//         return NextResponse.json(selectedItems)
-        
-//     } catch (error) {
-//         console.log(error)
-//         return NextResponse.json({
-//             error,
-//             message:"Failed to Fetch items",
-//         },{
-//             status:500
-//         })
-        
-//     }
-// }
 
 export async function DELETE(request){
     try {

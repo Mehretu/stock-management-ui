@@ -88,7 +88,7 @@ export default function PurchaseOrders() {
 }, [purchaseOrders,suppliers,searchQuery,selectedPurchaseStatus,selectedDateRange]);
 
 
-  const columns =["Order No","order date","supplier","delivery date","Cost","status"]
+  const columns =["Order No","order date","supplier","delivery date","Cost","status","By"]
   return (
     <div>
     {/* {Header} */}

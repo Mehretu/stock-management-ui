@@ -1,17 +1,19 @@
+import { authOptions } from "@/lib/authOptions";
 import db from "@/lib/db";
+import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
 
 
 
 export async function POST(request) {
     try {
+
+        const session = await getServerSession(authOptions);
+        const user = session?.user;
         const purchaseOrdersData = await request.json();
         console.log("PURCHASE DATA",purchaseOrdersData)
 
-        // const unavailableItems = salesOrderData.items.filter(item => parseFloat(item.availableQuantity) === 0 || parseFloat(item.quantity) > parseFloat(item.availableQuantity));
-        // if (unavailableItems.length > 0) {
-        //     throw new Error(`Some items are not available in sufficient quantity.`);
-        // }
+        
 
         // Validate other necessary fields (e.g., customer information)
         if (!purchaseOrdersData.supplierId || !purchaseOrdersData.items || purchaseOrdersData.items.length === 0) {
@@ -59,18 +61,16 @@ export async function POST(request) {
         });
         const itemOrders = await Promise.all(itemPromises);
 
-        // for (const item of purchaseOrdersData.items) {
-        //     await decrementItemQuantity(item.itemId, item.quantity,item.availableQuantity);
-        // }
+        
         const parsedOrderDate = new Date(purchaseOrdersData.orderDate)
         const isoOrderDate = parsedOrderDate.toISOString();
         
 
-        // Create the purchase order
         const purchaseOrder = await db.purchaseOrder.create({
             data:{
                 orderNumber: purchaseOrdersData.orderNumber,
                 supplierId: purchaseOrdersData.supplierId,
+                purchaseRepresentativeId: user.id,
                 orderDate: isoOrderDate,
                 purchaseStatus: 'PENDING', // Assuming all orders start as pending
                 itemsOrdered: { createMany: {data:itemOrders}},
@@ -179,6 +179,7 @@ export async function GET(request){
             },
             include:{
                 supplier: true,
+                purchaseRepresentative: true,
                 itemsOrdered:{
                     include:{
                         item:true,

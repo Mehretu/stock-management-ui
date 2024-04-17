@@ -9,6 +9,7 @@ export default function TableActions(
     isPurchase=false,
     isSales=false,
     isItem=false,
+    isBalance=false,
     onPrint,
     onSearch,
     searchQuery,
@@ -160,7 +161,12 @@ export default function TableActions(
       </div>
   </div>
       <div className='flex flex-wrap items-center gap-2 '>
-        <span className='text-xs font-medium text-gray-600'>Filter By:</span>
+        {
+          (isBalance)?"":
+            <span className='text-xs font-medium text-gray-600'>Filter By:</span>
+
+          
+        }
       {
         isItem? 
           (

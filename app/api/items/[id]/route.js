@@ -12,6 +12,9 @@ export async function GET(request,{params:{id}}){
                 supplier:true,
                 warehouse:true,
                 shop:true,
+                unit:true,
+                brand:true,
+                priceHistory:true,
             }
         });
         return NextResponse.json(item)
@@ -101,6 +104,20 @@ export async function PUT(request, { params: { id } }) {
             const unitVat =  parseFloat(itemData.taxRate/100) * parseFloat(itemData.sellingPrice);
             const totalPrice = parseInt(itemData.quantity) * parseFloat(itemData.sellingPrice);
             const totalVat = parseFloat(itemData.taxRate/100) * parseFloat(totalPrice);
+
+            const updatedHistory = [];
+            for (const field in itemData) {
+              if (existingItem[field] !== itemData[field]) {
+                updatedHistory.push({
+                  action: `Updated ${field}`,
+                  oldValue: existingItem[field],
+                  newValue: itemData[field],
+                  date: new Date(), // Capture timestamp
+                });
+                updateData[field] = itemData[field]
+              }
+            }
+        
             
 
         // Update the item
@@ -131,6 +148,7 @@ export async function PUT(request, { params: { id } }) {
                 description: itemData.description,
                 notes: itemData.notes,
                 totalPrice: totalPrice ,
+                history: existingItem.history ? existingItem.history.concat(updatedHistory) : updatedHistory,
                 itemStatus: parseInt(itemData.quantity) > 5 ? "AVAILABLE" : parseInt(itemData.quantity) > 0 ? "LOW_IN_QUANTITY" : "NOT_AVAILABLE"
             },
         });

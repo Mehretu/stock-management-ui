@@ -5,7 +5,6 @@ export async function PUT(request, { params: { id } }) {
     try {
         const itemData = await request.json();
 
-        // Fetch the existing item data
         const existingItem = await db.item.findUnique({
             where: {
                 id
@@ -13,7 +12,6 @@ export async function PUT(request, { params: { id } }) {
         });
 
 
-        // Calculate new quantity
         const existingQuantity = parseInt(existingItem.quantity);
         let newTargetQuantity = 0;
 
@@ -24,7 +22,6 @@ export async function PUT(request, { params: { id } }) {
             const totalVat = parseFloat(existingItem.taxRate/100) * parseFloat(totalPrice);
             
 
-        // Update the item
         const updatedItem = await db.item.update({
             where: {
                 id

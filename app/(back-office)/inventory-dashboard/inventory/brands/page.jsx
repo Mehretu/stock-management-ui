@@ -29,7 +29,7 @@ export default function Brands() {
 
 
  
-  const columns =["title","createdAt","updatedAt"]
+  const columns =["title","Date","Updated At"]
   return (
     <div>
     {/* {Header} */}

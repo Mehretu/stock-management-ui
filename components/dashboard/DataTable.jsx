@@ -1,5 +1,5 @@
 "use client"
-import {  ChevronDown, Pencil, PencilLine, Plus, Printer } from "lucide-react";
+import {  ChevronDown, Pencil, PencilLine, Plus, Printer, Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import DeleteBtn from "./DeleteBtn";
@@ -15,6 +15,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
   } from "@/components/ui/dropdown-menu"
+import { useSession } from "next-auth/react";
 export default function DataTable({data =[],columns=[],base,resourceTitle,selectAll=[],toggleSelectAll,setSelectedRows,showAddToSalesButton,showAddToShopButton,itemsPerPage,tableRef=null}) {
 
     const [showAddQuantityForm, setShowAddQuantityForm] = useState(false);
@@ -33,6 +34,8 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
     const formRef = useRef(null);
     const router = useRouter()
     const [isLoading,setLoading] = useState()
+    const {data:session,status}=useSession()
+
     const handleAddQuantity = (itemId) => {
         setSelectedItemId(itemId);
         setShowAddQuantityForm(true);
@@ -60,6 +63,20 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
             () =>{
                 window.location.reload();
 
+            }
+        )
+        setLoading(false);
+    }
+    const handleUpdatePurchaseStatus = (itemId,newStatus) => {
+        setSelectedItemId(itemId);
+        setLoading(true);
+        makePutRequest(
+            setLoading,
+            `api/purchaseOrders/updatePurchaseStatus/${itemId}`,
+            {status:newStatus},
+            "Purchase Status",
+            () => {
+                window.location.reload();
             }
         )
         setLoading(false);
@@ -138,6 +155,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                 setShowAddQuantityForm(false);
                 setShowChangePriceForm(false);
                 setShowAddItemForm(false);
+                setShowChangePaidForm(false);
             }
         }
 
@@ -214,7 +232,10 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
                 <th className="w-3 p-3">
-                <div className="flex items-center">
+                {
+                 (resourceTitle.includes("itemBalance"))?
+                 "":
+                 <div className="flex items-center">
                             <input 
                             id="checkbox-all" 
                             type="checkbox" 
@@ -225,6 +246,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
 
                             <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
                 </div>
+                }
                     
                 </th>   
                 {
@@ -239,9 +261,13 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                     })
                 }
    
+               {
+                (resourceTitle.includes("itemBalance"))?
+                "":
                 <th  scope="col" className="px-6 py-3 actions-column">
-                    Actions
-                </th>  
+                Actions
+                </th> 
+               } 
             </tr>
         </thead>
         <tbody>
@@ -255,7 +281,10 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                     className={`${isSelected ? 'bg-blue-100' : 'bg-white'} border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600`}
                 >
                     <td className="w-4 p-4">
-                    <div className="flex items-center">
+                    {
+                        (resourceTitle.includes("itemBalance"))?
+                        "":
+                        <div className="flex items-center">
                         <input id={`checkbox-table-${itemId } `}
                         type="checkbox" 
                         className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -264,6 +293,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                         />
                         <label htmlFor={`checkbox-table-${itemId}`} className="sr-only">checkbox</label>
                     </div>
+                    }
                     </td>
                         {
                             columns.map((columnName,i)=>(
@@ -351,6 +381,9 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                                     ): columnName ==="delivery date" ?(
                                         convertIsoToDate(item.deliveryDate)
                                         
+                                    ): columnName ==="By" ?(
+                                        item.purchaseRepresentative && <span>{item.purchaseRepresentative.name}</span>
+                                        
                                     ):columnName ==="status" && item.itemStatus === "AVAILABLE" ?(
                                         <span className="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                         <span className="w-2 h-2 me-1 bg-green-500 rounded-full"></span>
@@ -366,6 +399,22 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                                         <span className="inline-flex items-center bg-green-100 text-orange-800 text-xs font-medium px-2.5 py-0.5 rounded-full dark:bg-green-900 dark:text-green-300">
                                         <span className="w-2 h-2 me-1 bg-orange-500 rounded-full"></span>
                                             Pending
+                                            <div>
+                                            <DropdownMenu>
+                                            <DropdownMenuTrigger>
+                                            <div 
+                                                className="relative inline-flex items-center p-3 text-sm font-medium text-center text-white bg-transparent rounded-lg hover:bg-slate-200 focus:ring-4 focus:outline-none">
+                                                <ChevronDown className='text-slate-900 w-4 h-4'/>                         
+                                                </div>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent>
+                                            <DropdownMenuItem className="hover:bg-blue-300">
+                                                <button onClick={()=> handleUpdatePurchaseStatus(item.id,"Recieved")}>Recieved</button>
+                                            </DropdownMenuItem>
+
+                                            </DropdownMenuContent>
+                                            </DropdownMenu>
+                                            </div>
                                         </span>
                                     ):
                                     columnName ==="status" && item.purchaseStatus ==="RECIEVED" ?(
@@ -480,20 +529,49 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                                                 <div ref={formRef} className="absolute top-full left-0 z-10 duration-300 text-gray-500 bg-blue-50 p-4 border border-gray-200 shadow-sm space-y-2 rounded-lg w-80">
                                                     <div className="p-3">
                                                         <div className="flex">
-                                                            <div className="items-center mb-2 space-y-2">
-                                                            <span className="flex me-2 font-semibold text-gray-500 gap-2">
-                                                                Update Paid Amount
-                                                            </span>
-                                                            <span className="flex me-2 font-semibold text-gray-500 gap-2">
-                                                            <input type="number" name="paidAmount" value={paidAmount} onChange={(e) => setPaidAmount(parseInt(e.target.value))} className="w-30 px-2 py-1 border border-gray-300 rounded-md" />
+                                                           
+                                                        <ul>
+                                                        <li>
+                                                        <div className="text-xs space-y-2">
+                                                         <span className="flex me-2 font-semibold text-gray-500 gap-2">
+                                                            <p>Recieved:</p>
+                                                            {
+                                                                item.paymentHistory?.length > 0 ? (
+                                                                    <ul>
+                                                                      {item.paymentHistory.map((historyItem, index) => (
+                                                                        <li key={index} > 
+                                                                        {parseFloat(historyItem.paidAmount).toFixed(2)}
+                                                                        {historyItem.recievedBy && <span> -    By {historyItem.recievedBy}</span>}
 
-                                                            </span>
-                                                            <span className="flex me-2 font-semibold text-gray-500 gap-2">
-                                                                <button type="button"onClick={handleConfirmPaidAmount} className={`ml-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isLoading}>
-                                                                {isLoading ? 'Updating...' : 'Update'}
-                                                                </button>
-                                                            </span>
-                                                            </div>
+                                                                        </li>
+                                                                        
+                                                                      ))}
+                                                                    </ul>
+
+                                                                ):(
+                                                                    <p>{item.paidAmount}</p>
+                                                                )
+                                                            }
+                                                         </span>
+
+
+                                                        <span className="flex me-2 font-semibold text-gray-500 gap-2">
+                                                                    Update Paid Amount
+                                                                </span>
+                                                                <span className="flex me-2 font-semibold text-gray-500 gap-2">
+                                                                <input type="number" name="paidAmount" value={paidAmount} onChange={(e) => setPaidAmount(parseInt(e.target.value))} className="w-30 px-2 py-1 border border-gray-300 rounded-md" />
+
+                                                                </span>
+                                                                <span className="flex me-2 font-semibold text-gray-500 gap-2">
+                                                                    <button type="button"onClick={handleConfirmPaidAmount} className={`ml-2 px-4 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`} disabled={isLoading}>
+                                                                    {isLoading ? 'Updating...' : 'Update'}
+                                                                    </button>
+                                                                </span>
+
+                                                        </div>
+                                                        </li>
+                                                        </ul>
+                                                            
                                                         </div>
                                                     </div>
                                                 </div>
@@ -548,22 +626,36 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                                                             <li className="items-center mb-2">
                                                                 <span className="flex me-2 font-semibold text-gray-500 gap-2">
                                                                     <p>Unit Price:</p>
-                                                                    <p>{item.sellingPrice}</p>               
+                                                                    <p>{parseFloat(item.sellingPrice).toFixed(2)}</p>               
                                                                 </span>
                                                                 <span className="flex me-2 font-semibold text-gray-500 gap-2">
                                                                     <p>Unit Vat:</p>
-                                                                    <p>{item.unitVat}</p>
+                                                                    <p>{parseFloat(item.unitVat).toFixed(2)}</p>
                                                                     
                                                                 </span>
                                                                 <span className="flex me-2 font-semibold text-gray-500 gap-2">
                                                                     <p>Unit Price With Vat:</p>
-                                                                    <p>{item.unitPriceWithVat}</p>
+                                                                    <p>{parseFloat(item.unitPriceWithVat).toFixed(2)}</p>
                                                                     
                                                                 </span>
                                                                 <span className="flex me-2 font-semibold text-gray-500 gap-2">
                                                                     <p>Total Price With Vat:</p>
-                                                                    <p>{item.totalPriceWithVat}</p>
+                                                                    <p>{parseFloat(item.totalPriceWithVat).toFixed(2)}</p>
                                                                     
+                                                                </span>
+                                                                <span className="flex me-2 font-semibold text-gray-500 gap-2">
+                                                                    <p>Average Price:</p>
+                                                                    {
+                                                                         item.priceHistory?.length > 0 ? (
+                                                                            <p>
+                                                                              {parseFloat(
+                                                                                (item.priceHistory.reduce((acc, curr) => acc + parseFloat(curr.sellingPrice), 0) + parseFloat(item.sellingPrice)) / (item.priceHistory.length + 1)
+                                                                              ).toFixed(2)}
+                                                                            </p>
+                                                                          ) : (
+                                                                            <p>{parseFloat(item.sellingPrice).toFixed(2)}</p>
+                                                                          )
+                                                                    }
                                                                 </span>
                                                                 <span className="flex me-2 font-semibold text-gray-500 gap-2">
                                                                     <p>Date:</p>
@@ -597,7 +689,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                     
                     <td className="px-6 py-4 text-xs text-right flex items-center space-x-4">
                   {
-                    (resourceTitle.includes("adjustments"))?
+                    (resourceTitle.includes("adjustments") || resourceTitle.includes("itemBalance"))?
                 "":( 
                 <Link href={`/inventory-dashboard/${base}/${resourceTitle}/update/${item.id}`} className="font-medium text-blue-600 dark:text-blue-500  flex items-center space-x-1">
                 <Pencil className="w-4 h-4"/>
@@ -612,7 +704,19 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                      <Printer className="w-4 h-4"/>
                  </Link>: " "
                }
-                        <DeleteBtn id={item.id} endpoint={resourceTitle}/>
+               { (resourceTitle.includes("items") || resourceTitle.includes("purchaseOrders") )?
+               <Link href={`/inventory-dashboard/${base}/${resourceTitle}/${item.id}/detail`} className="font-medium text-blue-600 flex items-center space-x-1">
+               <Search className="w-4 h-4"/>
+                 </Link>: " "
+                  
+                 
+               }
+               {
+                (resourceTitle.includes("itemBalance"))?
+                "":                       
+                 <DeleteBtn id={item.id} endpoint={resourceTitle}/>
+
+               }
                     </td>
                 </tr>
                 )

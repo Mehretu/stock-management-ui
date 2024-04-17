@@ -1,9 +1,8 @@
+import Reports from '@/components/dashboard/Reports'
 import React from 'react'
 
-export default function Reports() {
+export default function ReportsPage() {
   return (
-    <div>
-        <h2>Reports</h2>
-    </div>
+    <Reports/>
   )
 }

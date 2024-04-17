@@ -6,14 +6,12 @@ import { NextResponse } from "next/server";
 
         const itemData=await request.json();
         console.log(itemData) 
-        // Get the warehouse   
         const warehouse =await db.warehouse.findUnique({
             where: {
                 id:itemData.warehouseId
             },
         })
         const totalPrice= parseFloat(itemData.sellingPrice) * parseInt(itemData.quantity)
-        //current stock of the warehouse
         const unitVat = parseFloat(itemData.taxRate/100) * parseFloat(itemData.sellingPrice)
         const unitPriceWithVat = unitVat + parseFloat(itemData.sellingPrice)
         const totalVat = parseFloat(itemData.taxRate/100) * parseFloat(totalPrice)
@@ -22,7 +20,6 @@ import { NextResponse } from "next/server";
         console.log("Total Price With Vat",totalPriceWithVat)
         const currentWarehouseStock = warehouse.stockQty;
         const newStockQty = parseInt(currentWarehouseStock) + parseInt(itemData.quantity)
-        //update the stock on the warehouse
         const updatedWarehouse = await db.warehouse.update({
             where:{
                 id:itemData.warehouseId,
@@ -37,7 +34,6 @@ import { NextResponse } from "next/server";
                     title:itemData.title,
                     categoryId:itemData.categoryId,
                     itemNumber:itemData.itemNumber,
-                    // barcode:itemData.barcode,
                     quantity:parseInt(itemData.quantity),
                     unitId:itemData.unitId,
                     brandId:itemData.brandId,
@@ -91,6 +87,7 @@ export async function GET(request){
                     supplier: true,
                     warehouse:true,
                     brand:true,
+
                     priceHistory:true,
                 },
                 where:{

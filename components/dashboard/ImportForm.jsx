@@ -1,6 +1,5 @@
 "use client"
 import SubmitButton from '@/components/FormInputs/SubmitButton'
-import TextInput from '@/components/FormInputs/TextInput'
 import FormHeader from '@/components/dashboard/FormHeader'
 import { makePostRequest } from '@/lib/apiRequest'
 import { useRouter } from 'next/navigation'
@@ -10,7 +9,7 @@ import FileInput from '../FormInputs/FileInput'
 import SelectInput from '../FormInputs/SelectInput'
 import { getData } from '@/lib/getData'
 import Radio from '../FormInputs/Radio'
-import { parseExcelFile } from '@/lib/excelUtils'
+import { parseExcelFile, parseExcelFileForPurchaseOrders, parseExcelFileForSalesOrders } from '@/lib/excelUtils'
 
 const specificOptions = [
   {
@@ -19,11 +18,11 @@ const specificOptions = [
   },
   {
       title:"Sales Orders",
-      id:"sales"
+      id:"salesOrders"
   },
   {
       title:"Purchase Orders",
-      id:"purchases"
+      id:"purchaseOrders"
   }
 ]
 
@@ -81,6 +80,19 @@ export default function ImportForm() {
         if (!data.warehouseId && importType === "warehouse") {
           importData.warehouseId = defaultId;
         }
+      }else if(data.specificId === "salesOrders"){
+        const salesOrders = await parseExcelFileForSalesOrders(data.file[0]);
+
+        importData ={
+          ...data,
+          salesOrders:salesOrders,
+        };
+      }else if(data.specificId === "purchaseOrders"){
+        const purchaseOrders = await parseExcelFileForPurchaseOrders(data.file[0]);
+        importData ={
+          ...data,
+          purchaseOrders:purchaseOrders,
+        };
       }
       console.log("Import Data",importData)
 
@@ -89,7 +101,7 @@ export default function ImportForm() {
         setLoading,
         `api/${data.specificId}/import`,
         importData,
-        "Item",
+        `${data.specificId}`,
         redirect,
         reset
 

@@ -40,8 +40,9 @@ model User {
   company Company? @relation(fields: [companyId], references: [id])
   companyId String? @db.ObjectId
   salesOrder  SalesOrder[]
-  profile        UserProfile? // Link to user profile
-  vendorProfile   VendorProfile? // Link to organization for farmers
+  purchaseOrder PurchaseOrder[]
+  profile        UserProfile? 
+  vendorProfile   VendorProfile? 
 }
 
 
@@ -74,15 +75,15 @@ model Item {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   title        String
   description  String?
-  category     Category? @relation(fields: [categoryId], references: [id],onDelete:Cascade)
-  categoryId   String?   @db.ObjectId
+  category     Category @relation(fields: [categoryId], references: [id],onDelete:Cascade)
+  categoryId   String   @db.ObjectId
   itemNumber   String   @unique
   barcode      String?
   quantity     Int
-  unit         Unit?     @relation(fields: [unitId], references: [id])
-  unitId       String?   @db.ObjectId
-  brand        Brand?    @relation(fields: [brandId], references: [id] , onDelete:Cascade)
-  brandId      String?   @db.ObjectId
+  unit         Unit    @relation(fields: [unitId], references: [id])
+  unitId       String   @db.ObjectId
+  brand        Brand    @relation(fields: [brandId], references: [id] , onDelete:Cascade)
+  brandId      String   @db.ObjectId
   buyingPrice  Float
   sellingPrice Float
   totalPrice   Float?
@@ -112,6 +113,10 @@ model Item {
   
   priceHistory PriceHistory[]
 
+  history Json?
+
+  
+
 }
 
 model PriceHistory {
@@ -122,6 +127,15 @@ model PriceHistory {
   buyingPrice Float
   quantity Int
   date        DateTime  @default(now())
+}
+
+model PaymentHistory {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+  salesId String @db.ObjectId
+  salesOrder SalesOrder @relation(fields: [salesId], references: [id])
+  paidAmount Float
+  recievedBy String?
+  date DateTime @default(now())
 }
 
 
@@ -234,7 +248,7 @@ model TransferStockAdjustment {
 model Supplier {
   id               String    @id @default(auto()) @map("_id") @db.ObjectId
   title  String @unique
-  phone String
+  phone String?
   email String?
   address String?
   contactPerson String?
@@ -261,6 +275,8 @@ model PurchaseOrder{
   purchaseTotalwithoutVat Float?
   vat Float?
   purchaseStatus       PurchaseStatus
+  purchaseRepresentative User? @relation(fields: [purchaseRepresentativeId], references: [id])
+  purchaseRepresentativeId String? @db.ObjectId
   recievingLocation String
   createdAt         DateTime    @default(now())
   updatedAt         DateTime    @updatedAt
@@ -293,6 +309,8 @@ model SalesOrder {
   updatedAt         DateTime    @updatedAt
   invoice   Invoice[]
   paymentStatus     PaymentStatus
+
+  paymentHistory PaymentHistory[]
 
 }
 
@@ -330,11 +348,11 @@ model Package {
 model Invoice {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
   invoiceNumber    String   @unique
-  salesOrder       SalesOrder @relation(fields: [salesOrderId], references: [id])
-  salesOrderId     String   @db.ObjectId
+  salesOrder       SalesOrder? @relation(fields: [salesOrderId], references: [id])
+  salesOrderId     String?   @db.ObjectId
   invoiceDate      DateTime
   dueDate          DateTime
-  itemsInvoiced    ItemOrder[] // List of items included in the invoice
+  itemsInvoiced    ItemOrder[] 
   invoiceTotal     Float
   paymentStatus    PaymentStatus
   paymentMethod    String
@@ -381,10 +399,10 @@ enum PaymentStatus {
 
 model Customer {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  name        String   @unique
   email       String   @unique
-  phone       String
-  address     String
+  phone       String?
+  address     String?
   salesOrders SalesOrder[]
   invoices    Invoice[]
   receipts    Receipt[]
