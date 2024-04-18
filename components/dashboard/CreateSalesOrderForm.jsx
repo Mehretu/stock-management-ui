@@ -14,6 +14,8 @@ import toast from 'react-hot-toast'
 export default function CreateSalesOrderForm({customers={},items={},initialData={},tableInitialData={},isUpdate=false}) {
   const router = useRouter()
   const [orderedItems, setOrderedItems] = useState([]);
+  const [customerValue, setCustomerValue] = useState(initialData?.customer?.name || '')
+  
   const timestamp = Date.now()
   const referenceNumbers =  `SALES-${timestamp}`
 
@@ -80,6 +82,7 @@ export default function CreateSalesOrderForm({customers={},items={},initialData=
       const selectedCustomer = customers.find((customer) => customer.name === option.name);
       if (selectedCustomer) {
         setValue('customerId', selectedCustomer.id); 
+        setCustomerValue(option.name)
       }
     }
   };
@@ -124,6 +127,7 @@ export default function CreateSalesOrderForm({customers={},items={},initialData=
     }
   ]
  console.log("Ordered Items",orderedItems)
+ console.log("Here",initialData)
 
  useEffect(() => {
   if (tableInitialData.length) {
@@ -132,16 +136,30 @@ export default function CreateSalesOrderForm({customers={},items={},initialData=
         itemId: item.id,
         itemName: item.title,
         itemNumber: item.itemNumber,
-        quantity: 1, 
+        quantity: 1,
         price: item.sellingPrice,
         availableQuantity: item.quantity,
-        total: item.sellingPrice, 
+        total: item.sellingPrice,
+      }))
+    );
+  } else if (initialData && initialData.itemsOrdered.length) {
+    setOrderedItems(
+      initialData.itemsOrdered?.map((itemOrdered) => ({
+        itemId: itemOrdered.itemId,
+        itemName: itemOrdered.item?.title,
+        itemNumber: itemOrdered.item?.itemNumber,
+        quantity: itemOrdered.quantity,
+        price: itemOrdered.price,
+        availableQuantity: itemOrdered.item?.quantity,
+        total: itemOrdered.totalPrice,
       }))
     );
   } else {
     setOrderedItems([]);
   }
-}, [tableInitialData]);
+}, [tableInitialData, initialData]);
+
+
 
 
  async function onSubmit(data) {
@@ -196,10 +214,12 @@ export default function CreateSalesOrderForm({customers={},items={},initialData=
             <label htmlFor="customer-autocomplete" className="block text-sm font-medium leading-6 text-gray-900 mb-2 ">
               Customer Name
             </label>
+
             <Autocomplete
               id='customer-autocomplete'
               freeSolo
               disableClearable
+              inputValue={customerValue}
               options={customers}
               getOptionLabel={(option) => option.name}
               renderInput={(params) => (

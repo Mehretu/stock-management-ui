@@ -1,19 +1,23 @@
+"use client"
 import FormHeader from '@/components/dashboard/FormHeader'
 import { getData } from '@/lib/getData'
 import CreatePurchaseOrderForm from './CreatePurchaseOrderForm';
+import { useEffect, useState } from 'react';
 
 export default async function NewPurchase({tableInitialData={},  initialData={},isUpdate=false}) {
-  const supplierData=  getData('supplier')
-  const itemsData=  getData('items')
+  const [suppliers,setSuppliers] = useState([])
+  const [items,setItems] = useState([])
+  useEffect(() => {
+    async function fetchDatas(){
+      const supplierData= await getData('supplier')
+      const itemsData= await getData('items')
+      setSuppliers(supplierData)
+      setItems(itemsData)
+    }
+    fetchDatas()
 
-  //Parallel Fetching
-  const [suppliers,items] = await 
-  Promise.all([
-    supplierData,
-    itemsData
-    
-  ]);
-
+  },[])
+  
   return (
     <div>
         {/* {Header} */}

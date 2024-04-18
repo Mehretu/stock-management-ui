@@ -1,5 +1,4 @@
 import NewPurchase from '@/components/dashboard/NewPurchase';
-import React from 'react'
 
 export default async function Page() {
     const data = {};

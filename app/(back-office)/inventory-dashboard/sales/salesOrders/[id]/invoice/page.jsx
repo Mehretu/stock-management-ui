@@ -1,11 +1,19 @@
+"use client"
 import SalesInvoice from "@/components/dashboard/SalesInvoice";
 import { getData } from "@/lib/getData";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
-export default async function page({params:{id}}) {
+export default function page({params:{id}}) {
     
-    const order = await getData(`salesOrders/${id}`)
-    console.log(order)
+  const [order,setOrder] = useState([])
+  useEffect(() => {
+   async function fetchData(){
+     const data = await getData(`salesOrders/${id}`);
+     setOrder(data)
+   }
+   fetchData
+  },[id])    
+  console.log(order)
     
   return (
     <SalesInvoice order={order} />
