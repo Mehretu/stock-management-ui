@@ -1,23 +1,10 @@
 "use client"
 import LoginForm from "@/components/Auth/LoginForm";
-// import { useSession } from "next-auth/react";
-// import { useRouter } from "next/navigation";
+
 import { MdOutlineInventory } from "react-icons/md";
 
 export default function Login() {
-    // const {data:session,status} =useSession()
-    // const router = useRouter()
-
-    // if(status==='loading'){
-    //     return (
-    //         <div className="flex items-center justify-center w-full max-h-full border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-    //           <div className="px-3 py-1 mt-10 mb-10 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">loading user please wait...</div>
-    //         </div>
-    //       )
-    // }
-    // if(status==='authenticated'){
-    //     router.push('/inventory-dashboard/home/overview')
-    // }
+   
   return (
     <section className='bg-gray-50 dark:bg-gray-900'>
         <div className='flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0'>
