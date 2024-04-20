@@ -96,6 +96,8 @@ export async function PUT(request, { params: { id } }) {
                 totalPriceWithVat: totalPriceWithVat,
                 totalPrice: totalPrice,
                 quantity: newItemQuantity,
+                itemStatus: parseInt(itemData.quantity) > 5 ? "AVAILABLE" : parseInt(itemData.quantity) > 0 ? "LOW_IN_QUANTITY" : "NOT_AVAILABLE"
+
             },
         });
 

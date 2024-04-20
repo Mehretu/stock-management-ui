@@ -70,7 +70,6 @@ export default  function Warehouse() {
      {
           warehouses.map((warehouse,i) => {
             return <WarehouseAccordion key={i} title={`Items | ${warehouse.title}`} items={warehouse.items} brands={brands}/>
-            // <CurrentStock  key={i} title={`Items | ${warehouse.title}`} items={warehouse.items}/>
           })
         }
     </div>
