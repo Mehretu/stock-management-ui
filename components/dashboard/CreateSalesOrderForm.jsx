@@ -130,7 +130,7 @@ export default function CreateSalesOrderForm({customers={},items={},initialData=
  console.log("Here",initialData)
 
  useEffect(() => {
-  if (tableInitialData.length) {
+  if (tableInitialData?.length) {
     setOrderedItems(
       tableInitialData.map((item) => ({
         itemId: item.id,
@@ -142,7 +142,7 @@ export default function CreateSalesOrderForm({customers={},items={},initialData=
         total: item.sellingPrice,
       }))
     );
-  } else if (initialData && initialData.itemsOrdered.length) {
+  } else if (initialData && initialData.itemsOrdered?.length) {
     setOrderedItems(
       initialData.itemsOrdered?.map((itemOrdered) => ({
         itemId: itemOrdered.itemId,
