@@ -7,14 +7,19 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import Input from '../FormInputs/Input'
-import { Autocomplete, TextField } from '@mui/material'
-import DateInput from '../FormInputs/DateInput'
+// import { Autocomplete, TextField } from '@mui/material'
+import { AutoComplete } from 'primereact/autocomplete'
 import { convertIsoToDate } from '@/lib/convertIstoToDate'
 import SelectInput from '../FormInputs/SelectInput'
 
 export default function CreatePurchaseOrderForm({suppliers,items,initialData={},tableInitialData={},isUpdate=false}) {
+  console.log("Suppliers", suppliers)
   const router = useRouter()
   const [orderedItems, setOrderedItems] = useState([]);
+  const [supplierValue, setSupplierValue] = useState(initialData?.supplier?.title || null);
+  const [filteredSuppliers, setFilteredSuppliers] = useState([]);
+  const [filterItems, setFilterItems] = useState([]);
+  const [itemValue, setItemValue] = useState(initialData?.item?.title || null)
   const timestamp = Date.now()
   const orderNumber =  `Order-${timestamp}`
   const date = convertIsoToDate(timestamp)
@@ -36,6 +41,7 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
 
   // Function to add a new row for an item
   const addNewItemRow = () => {
+    setItemValue(null)
     const newItemRow = {
       itemId: undefined,
       itemName: '',
@@ -56,8 +62,13 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
 
 
 
-  const handleSuggestionSelected = (event, option, selectedIndex) => {
-    const selectedItem = items.find((item) => item.title === option.title || item.itemNumber === option.itemNumber);
+  const handleItemChange = (e,selectedIndex) => {
+    const updatedItems = [...orderedItems];
+
+  // Update the selected item based on the input value
+    updatedItems[selectedIndex].itemName = e.value;
+    setItemValue(e.value)
+    const selectedItem = items.find((item) => item.title === e.value.title);
     if (selectedItem) {
       const updatedItems = [...orderedItems];
       updatedItems[selectedIndex] = {
@@ -65,18 +76,49 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
         itemId: selectedItem.id,
         itemName: selectedItem.title,
         itemNumber: selectedItem.itemNumber,
+        availableQuantity: selectedItem.quantity,
         price: selectedItem.sellingPrice,
         total: selectedItem.sellingPrice * updatedItems[selectedIndex].quantity, 
       };
       setOrderedItems(updatedItems);
-    }
+    } 
   };
-  const handleCustomerSuggestion = (event, option) => {
-    if (option) {
-      const selectedSupplier = suppliers.find((supplier) => supplier.title === option.title);
-      if (selectedSupplier) {
-        setValue('supplierId', selectedSupplier.id); 
+
+  const handleItemSuggestion = (event) => {
+    setTimeout(() => {
+      let _filteredItems;
+
+      if(!event.query.trim().length){
+        _filteredItems = [...items];
       }
+      else{
+        _filteredItems = items.filter((item) => {
+          return item.title.toLowerCase().startsWith(event.query.toLowerCase());
+        });
+      }
+     setFilterItems(_filteredItems);
+
+    })
+    
+
+  };
+  const handleSupplierSuggestion = (event) => {
+    const query = event.query.toLowerCase();
+    let _filteredSuppliers = suppliers.filter((supplier) => supplier.title.toLowerCase().includes(query));
+    console.log("Filtered Suppliers", _filteredSuppliers)
+    setFilteredSuppliers(_filteredSuppliers);
+  };
+    
+
+  
+  const handleSupplierChange = (e) => {
+    const supplier = setSupplierValue(e.value);
+    console.log("Supplier", supplier)
+    const selectedSupplier = suppliers.find((supplier) => supplier.title === e.value.title);
+    console.log("Selected Supplier",selectedSupplier)
+    if (selectedSupplier) {
+      setValue('supplierId', selectedSupplier.id);
+      
     }
   };
   const handleQuantityChange = (index, value) => {
@@ -99,9 +141,6 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
         id:"vat"
     }
   ]
-  
-
-
   const paymentMethods = [
     {
       title:"Cash",
@@ -186,24 +225,18 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
             <label htmlFor="supplier-autocomplete" className="block text-sm font-medium leading-6 text-gray-900 mb-2 ">
               Supplier Name
             </label>
-            <Autocomplete
-              id='supplier-autocomplete'
-              freeSolo
-              disableClearable
-              options={suppliers}
-              getOptionLabel={(option) => option.title}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  variant="outlined"
-                  size="small"
-                  className="block w-full rounded-md border-0 py-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6"
+            <div className='card flex justify-content-center'>
 
-
+                <AutoComplete
+                value={supplierValue}
+                suggestions={filteredSuppliers}
+                completeMethod={handleSupplierSuggestion}
+                field="title"
+                onChange={handleSupplierChange}
+                className='custom-autocomplete'
                 />
-              )}
-              onChange={(event, option) => handleCustomerSuggestion(event, option)}
-            />
+            </div>
+            
           </div>
           <TextInput label="Order Number" type='text' name="orderNumber" register={register} errors={errors} defaultValue={orderNumber}  />
           <TextInput label="Order Date" type='text' name="orderDate" register={register} errors={errors} defaultValue={date} />
@@ -233,29 +266,25 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
                 <tr key={index} className="bg-white hover:bg-gray-100 ">
                   <td className='px-4 py-4 text-left'>
                     {item.itemId ? (
-                      <span className="w-full whitespace-nowrap">
-                        {item.itemName}
-                        </span>
-
+                      <AutoComplete
+                      id={`item-autocomplete-${index}`}
+                      value={item.itemName}
+                      suggestions={filterItems}
+                      completeMethod={handleItemSuggestion}
+                      field="title"
+                      onChange={(e) => handleItemChange(e,index)}
+                      className='custom-autocomplete'
+                    />
                     ):(
-                      <Autocomplete
-                    id={`free-solo-demo-${index}`}
-                    freeSolo
-                    disableClearable
-                    options={items}
-                    getOptionLabel={(option) => option.title || option.itemNumber}
-                    renderInput={(params) => (
-                      <TextField
-                        {...params}
-                        size='small'
-                        InputProps={{
-                          ...params.InputProps,
-                          type:'search'
-                        }}
-                      />
-                    )}
-                    onChange={(event, option) => handleSuggestionSelected(event, option, index)}
-                  />
+                      <AutoComplete
+                      id={`item-autocomplete-${index}`}
+                      value={itemValue}
+                      suggestions={filterItems}
+                      completeMethod={handleItemSuggestion}
+                      field="title"
+                      onChange={(e) => handleItemChange(e,index)}
+                      className='custom-autocomplete'
+                    />
 
                     )}
                   
@@ -266,11 +295,11 @@ export default function CreatePurchaseOrderForm({suppliers,items,initialData={},
                   <td><Input type="number" name={`items[${index}].price`} value={item.price}  register={register} errors={errors} className='mb-2 px-1 py-1 text-left' isRequired={false}/></td>
                   <td ><Input type='number' name={`items[${index}].total`} value={item.total} register={register} errors={errors} className='mb-2 px-1 py-1 text-left' isRequired={false}/></td>
                   <td>
-                    {item.itemId ?(
+                    
                       <button className='flex items-center mx-1' type="button" onClick={() => removeItemRow(index)}>
                       <X className='w-4 h-4 text-white rounded-lg bg-red-400 hover:bg-red-500'/>
                     </button>
-                    ): null}
+                    
                   </td>
                 </tr>
               ))}

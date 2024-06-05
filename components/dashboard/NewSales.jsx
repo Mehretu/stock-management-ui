@@ -4,6 +4,7 @@ import { getData } from '@/lib/getData'
 import CreateSalesOrderForm from './CreateSalesOrderForm'
 import { useEffect, useState } from 'react'
 
+
 export default function NewSales({initialData={},isUpdate=false,tableInitialData={}}) {
   const [customers,setCustomers] = useState([])
   const [companies,setCompanies] = useState([])

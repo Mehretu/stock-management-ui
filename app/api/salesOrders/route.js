@@ -25,39 +25,40 @@ export async function POST(request) {
         }
 
         // Calculate order total based on item prices and quantities including VAT
-        const orderTotalWithoutVAT = salesOrderData.items.reduce((total, item) => {
-            return total + parseFloat(item.total);
-        }, 0);
-        console.log("OrderTotalWithoutVat",orderTotalWithoutVAT)
+        // const orderTotalWithoutVAT = salesOrderData.items.reduce((total, item) => {
+        //     return total + parseFloat(item.total);
+        // }, 0);
+        // console.log("OrderTotalWithoutVat",orderTotalWithoutVAT)
         
 
-        // Determine VAT rate
-        let vatRate;
-        if (salesOrderData.vat === 'novat') {
-            vatRate = 0;
-        } else if (salesOrderData.vat === 'vat') {
-            vatRate = 0.15; // Assuming VAT rate of 15%
-        } else {
-            throw new Error(`Invalid VAT option.`);
-        }
+        // // Determine VAT rate
+        // let vatRate;
+        // if (salesOrderData.vat === 'novat') {
+        //     vatRate = 0;
+        // } else if (salesOrderData.vat === 'vat') {
+        //     vatRate = 0.15; // Assuming VAT rate of 15%
+        // } else {
+        //     throw new Error(`Invalid VAT option.`);
+        // }
 
-        // Calculate VAT amount
-        const vatAmount = orderTotalWithoutVAT * parseFloat(vatRate);
-        console.log("Vat amonut",vatAmount)
+        // // Calculate VAT amount
+        // const vatAmount = orderTotalWithoutVAT * parseFloat(vatRate);
+        // console.log("Vat amonut",vatAmount)
 
-        // Calculate order total including VAT
-        const orderTotalWithVAT = orderTotalWithoutVAT + vatAmount;
-        console.log("Order Total with Vat",orderTotalWithVAT)
+        // // Calculate order total including VAT
+        // const orderTotalWithVAT = orderTotalWithoutVAT + vatAmount;
+        // console.log("Order Total with Vat",orderTotalWithVAT)
 
         let paymentStatus = 'OUTSTANDING'
         const paidAmount = parseFloat(salesOrderData.paidAmount);
-        if (paidAmount > 0 && paidAmount < orderTotalWithVAT) {
+        const grandTotal = parseFloat(salesOrderData.grandTotal)
+        if (paidAmount > 0 && paidAmount < grandTotal) {
             paymentStatus = 'PARTIAL';
-        } else if (paidAmount >= orderTotalWithVAT) {
+        } else if (paidAmount >= grandTotal) {
             paymentStatus = 'PAID';
         }
 
-        const remaining = orderTotalWithVAT - paidAmount
+        const remaining = grandTotal - paidAmount
 
        
 
@@ -91,13 +92,14 @@ export async function POST(request) {
                 orderDate: new Date(),
                 orderStatus: 'PENDING', // Assuming all orders start as pending
                 itemsOrdered: { createMany: {data:itemOrders}},
-                orderTotal: parseFloat(orderTotalWithVAT), 
+                orderTotal: grandTotal, 
                 paymentMethod: salesOrderData.paymentMethod,
                 paidAmount: parseFloat(salesOrderData.paidAmount),
                 paymentStatus: paymentStatus,
                 remainingAmount: parseFloat(remaining),
-                orderTotalWithoutVAT:orderTotalWithoutVAT,
-                vat:vatAmount,
+                orderTotalWithoutVAT:parseFloat(salesOrderData.subTotal),
+                vat:parseFloat(salesOrderData.vAt),
+                discount:parseFloat(salesOrderData.discount)
             }
 
         })

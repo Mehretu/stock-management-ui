@@ -9,8 +9,8 @@ export default function FixedHeader({newLink,title}) {
         <div className="flex gap-4">
             {/* {New} */}
               <Link href={newLink} className='p-1 bg-blue-600 rounded-sm flex items-center space-x-2 px-3 text-white'>
-                <Plus className=' w-4 h-4'/>
-              <span>New</span>
+                <Plus className='w-4 h-4'/>
+              <span className='hidden md:block'>New</span>
               </Link> 
           
             

@@ -105,7 +105,7 @@ export default function Items() {
 
 
  
-  const columns =["Item Name","Item No","Buying Price","Selling Price","Total Price","category","quantity","supplier","brand","status"]
+  const columns =["Item Name","Item No","Buying Price","Selling Price","quantity","brand","status","Total Price","category"]
   return (
     <div>
     {/* {Header} */}

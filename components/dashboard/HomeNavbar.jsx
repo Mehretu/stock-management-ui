@@ -13,7 +13,8 @@ export default function HomeNavbar() {
   if(status==='loading'){
     return (
       <div className="flex items-center justify-center w-full max-h-full border border-gray-100 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
-        <div className="px-3 py-1 mt-10 mb-10 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200">loading user please wait...</div>
+        <div className="px-3 py-1 mt-10 mb-10 text-xs font-medium leading-none text-center text-blue-800 bg-blue-200 rounded-full animate-pulse dark:bg-blue-900 dark:text-blue-200"
+        >loading user please wait...</div>
       </div>
 
     )
@@ -32,7 +33,7 @@ export default function HomeNavbar() {
     }
   ]
   return (
-    <div className='h-32 p-5 header-bg bg-slate-50'>
+    <div className='h-32 p-5 header-bg bg-slate-50 hidden md:block'>
         <div className="flex space-x-3">
             <div className="flex w-12 h-12 rounded-lg bg-white items-center justify-center">
               <Building2/>  

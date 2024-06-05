@@ -99,11 +99,11 @@ export default function AddToShop({ selectedRows, resourceName, reload }) {
       <select
         value={selectedShop}
         onChange={handleShopChange}
-        className="text-gray-900 hover:text-gray-900 text-sm px-5 py-2.5 border border-gray-800 text-center inline-flex items-center rounded  me-2 mb-2"
+        className="text-gray-900 hover:text-gray-900 text-sm px-5 py-1.5 border border-gray-800 text-center inline-flex items-center rounded  me-2 mb-2 sm:w-auto"
       >
         <option value="" >Select Shop</option>
         {shops.map((shop) => (
-          <option key={shop.id} value={shop.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+          <option key={shop.id} value={shop.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full sm:w-auto dark:bg-gray-700 dark:divide-gray-600">
             {shop.title}
           </option>
         ))}
@@ -111,7 +111,7 @@ export default function AddToShop({ selectedRows, resourceName, reload }) {
       <button
         onClick={handleAddToShop}
         disabled={!selectedShop || selectedRows.length === 0 || loading}
-        className={`text-gray-900 hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center me-2 mb-2 ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+        className={`text-gray-900 text-xs hover:text-white border border-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-gray-300 font-medium rounded-lg px-3 py-1 me-2 mb-2 sm:w-auto ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
       >
         {loading ? "Adding..." : "Add to Shop"}
       </button>

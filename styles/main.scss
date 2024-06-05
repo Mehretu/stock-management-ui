@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
  
 @layer base {
   :root {
@@ -103,3 +106,55 @@
     display: none;
 }
 }
+
+/* main.scss */
+
+/* Ensure the custom-autocomplete container takes full width */
+.custom-autocomplete {
+  width: 100%;
+  position: relative; /* Make sure the container is relative to its parent */
+}
+
+/* Style the AutoComplete input to match other input fields */
+.custom-autocomplete .p-autocomplete-input {
+  height: 40px;
+  width: 100%;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+/* Style the suggestion panel to align with the input field */
+.custom-autocomplete .p-autocomplete-panel {
+  width: 100% !important; /* Ensure the panel matches the width of the container */
+  max-width: none !important; /* Prevent the panel from being constrained by a max-width */
+  left: 0 !important; /* Align the panel to the left edge of the container */
+}
+
+/* Additional styling to make the input consistent */
+.p-inputtext {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.p-inputtext:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+}
+
+/* Ensure consistency within custom-autocomplete */
+.custom-autocomplete .p-inputtext {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.custom-autocomplete .p-inputtext:focus {
+  border-color: #2563eb;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.5);
+}
+
+
+

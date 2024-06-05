@@ -301,6 +301,7 @@ model SalesOrder {
   remainingAmount   Float
   vat               Float?
   orderTotalWithoutVAT Float?
+  discount           Float?
   salesRepresentative User?    @relation(fields: [salesRepresentativeId], references: [id])
   salesRepresentativeId String? @db.ObjectId
   package     Package[]
@@ -399,7 +400,7 @@ enum PaymentStatus {
 model Customer {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String   @unique
-  email       String   @unique
+  email       String?   @unique
   phone       String?
   address     String?
   salesOrders SalesOrder[]

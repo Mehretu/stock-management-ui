@@ -78,6 +78,9 @@ export default withUt({
   plugins: [
     require("tailwindcss-animate"),
     require('@tailwindcss/forms'),
+    require('flowbite/plugin')({
+      charts: true,
+    }),
   ],
 });
 
