@@ -1,9 +1,8 @@
 "use client"
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SalesActivityCard from './SalesActivityCard'
 import InventorySummaryCard from './InventorySummaryCard'
 import { getData } from '@/lib/getData'
-import ApexCharts from 'apexcharts'
 import {
   DropdownMenu,
   DropdownMenuContent,
