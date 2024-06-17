@@ -142,7 +142,7 @@ export default function TableActions(
 
  
   return (
-    <div className="flex flex-col mx-1 mt-2 md:flex-row md:justify-between py-4 px-4 bg-slate-200 rounded-lg md:items-center gap-2">
+<div className="flex flex-col mx-1 mt-2 md:flex-row md:justify-between py-4 px-4 bg-slate-200 rounded-lg md:items-center gap-2">
   <div className='flex items-center justify-between w-full md:w-auto mb-0'>
     <button 
       onClick={()=> {onPrint();}}
@@ -181,7 +181,7 @@ export default function TableActions(
         <select
           value={selectedCategory}
           onChange={handleCategoryChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-0 md:ml-0">
           <option value="">Category</option>
           {categories.map((category) => (
             <option key={category.id} value={category.id} className="bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -196,7 +196,7 @@ export default function TableActions(
         <select
           value={selectedShop}
           onChange={handleShopChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Shop</option>
           {shops.map((shop) => (
             <option key={shop.id} value={shop.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -211,7 +211,7 @@ export default function TableActions(
         <select
           value={selectedWarehouse}
           onChange={handleWarehouseChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Store</option>
           {warehouses.map((warehouse) => (
             <option key={warehouse.id} value={warehouse.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -226,7 +226,7 @@ export default function TableActions(
         <select
           value={selectedStatus}
           onChange={handleStatusChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Status</option>
           {statuses.map((status) => (
             <option key={status.id} value={status.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -241,7 +241,7 @@ export default function TableActions(
         <select
           value={selectedPaymentStatus}
           onChange={handlePaymentStatusChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Payment Status</option>
           {paymentStatus.map((status) => (
             <option key={status.id} value={status.id} className="z-10 bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -256,7 +256,7 @@ export default function TableActions(
         <select
           value={selectedOrderStatus}
           onChange={handleOrderStatusChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Order Status</option>
           {orderStatus.map((status) => (
             <option key={status.id} value={status.id} className="bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -271,7 +271,7 @@ export default function TableActions(
         <select
           value={selectedPurchaseStatus}
           onChange={handlePurchaseStatusChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Purchase Status</option>
           {purchaseStatus.map((status) => (
             <option key={status.id} value={status.id} className="bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -286,7 +286,7 @@ export default function TableActions(
         <select
           value={selectedDateRange}
           onChange={handleDateRangeChange}
-          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1">
+          className="bg-gray-50 border border-gray-300 text-gray-600 text-xs rounded-lg focus:ring-blue-500 focus:border-blue-500 block px-2 mx-1 my-1 ml-4 md:ml-0">
           <option value="">Date Range</option>
           {dateRanges.map((dateRange) => (
             <option key={dateRange.id} value={dateRange.id} className="bg-gray-100 divide-y divide-gray-100 rounded-lg shadow w-full dark:bg-gray-700 dark:divide-gray-600">
@@ -298,6 +298,7 @@ export default function TableActions(
     }
   </div>
 </div>
+
 
   )
 }
