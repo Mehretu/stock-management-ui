@@ -7,6 +7,7 @@ import Image from "next/image"; // Import for using next/image component
 
 // This line marks the SalesInvoice component as a Client Component
 export default function SalesInvoice({ order }) {
+  console.log("Order", order)
   const invoiceDate = convertIsoToDate(order.createdAt);
 
   const invoiceRef = useRef();
@@ -44,10 +45,10 @@ export default function SalesInvoice({ order }) {
         <div className="flex justify-between border-b border-gray-200 py-8">
           <div className="flex flex-col">
             <h2 className="text-xl font-semibold">Bill To:</h2>
-            <p>{order.customer.name}</p>
-            <p>{order.customer.address}</p>
-            <p>{order.customer.phone}</p>
-            <p>{order.customer.email}</p>
+            <p>{order.customer?.name}</p>
+            <p>{order.customer?.address}</p>
+            <p>{order.customer?.phone}</p>
+            <p>{order.customer?.email}</p>
           </div>
           <div className="flex flex-col ">
             <div className="flex justify-between">
@@ -89,7 +90,7 @@ export default function SalesInvoice({ order }) {
             </thead>
             <tbody>
               {/* Loop through each item in the order and render a table row */}
-              {order.itemsOrdered.map((item, i) => (
+              {order.itemsOrdered?.map((item, i) => (
                 <tr key={i} className="bg-white border-b border-gray-200 hover:bg-gray-100">
                   <th
                     scope="row"

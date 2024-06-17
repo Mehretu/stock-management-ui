@@ -33,7 +33,7 @@ export default function PurchaseDetails({ order }) {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <p className="font-semibold">Supplier:</p>
-              <p>{order.supplier.title}</p>
+              <p>{order?.supplier?.title}</p>
             </div>
             <div>
               <p className="font-semibold">Order Number:</p>
@@ -81,7 +81,7 @@ export default function PurchaseDetails({ order }) {
               </tr>
             </thead>
             <tbody>
-              {order.itemsOrdered.map((item, i) => (
+              {order.itemsOrdered?.map((item, i) => (
                 <tr key={i} className="border border-gray-200 hover:bg-gray-100">
                   <td className="px-6 py-4">{item.item.title}</td>
                   <td className="px-6 py-4">{item.origin}</td>

@@ -173,7 +173,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                     
         {selectedRows.length > 0 && (
         <div className="flex flex-col sm:flex-row justify-between p-2">
-            <div className="flex flex-wrap gap-1 sm:flex-row sm:w-3/5">
+            <div className="flex flex-wrap gap-1 sm:flex-row sm:w-full">
             <Link
                 href={`/inventory-dashboard/sales/salesOrders/addToSales?selectedItems=${JSON.stringify(
                 selectedRows
@@ -223,9 +223,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
         <thead className="text-xs text-gray-700 uppercase bg-gray-50">
             <tr>
                 <th className="w-3 p-3">
-                {
-                 (resourceTitle.includes("itemBalance"))?
-                 "":
+                
                  <div className="flex items-center">
                             <input 
                             id="checkbox-all" 
@@ -237,7 +235,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
 
                             <label htmlFor="checkbox-all" className="sr-only">checkbox</label>
                 </div>
-                }
+                
                     
                 </th>   
                 {
@@ -253,8 +251,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                 }
    
                {
-                (resourceTitle.includes("itemBalance"))?
-                "":
+               
                 <th  scope="col" className="px-2 py-3 actions-column">
                 Actions
                 </th> 
@@ -273,8 +270,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                 >
                     <td className="w-4 p-3">
                     {
-                        (resourceTitle.includes("itemBalance"))?
-                        "":
+                        
                         <div className="flex items-center">
                         <input id={`checkbox-table-${itemId } `}
                         type="checkbox" 
@@ -681,8 +677,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                     
                     <td className="px-2 py-4 text-xs text-right flex items-center space-x-2">
                   {
-                    (resourceTitle.includes("adjustments") || resourceTitle.includes("itemBalance"))?
-                "":( 
+                   ( 
                 <Link href={`/inventory-dashboard/${base}/${resourceTitle}/update/${item.id}`} className="font-medium text-blue-600 dark:text-blue-500  flex items-center space-x-1">
                 <Pencil className="w-4 h-4 hidden md:block"/>
                
@@ -704,8 +699,7 @@ export default function DataTable({data =[],columns=[],base,resourceTitle,select
                  
                }
                {
-                (resourceTitle.includes("itemBalance"))?
-                "":                       
+                                    
                  <DeleteBtn id={item.id} endpoint={resourceTitle}/>
 
                }

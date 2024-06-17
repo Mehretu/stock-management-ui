@@ -11,7 +11,7 @@ export default function page({params:{id}}) {
      const data = await getData(`salesOrders/${id}`);
      setOrder(data)
    }
-   fetchData
+   fetchData()
   },[id])    
   console.log(order)
     
